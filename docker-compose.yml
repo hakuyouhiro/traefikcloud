@@ -2,13 +2,13 @@ version: '3.3'
 
 
 ########################### SECRETS
-#secrets:
-#  cloudflare_email:
-##    file: /root/docker/core-stack/secrets/cloudflare_email
-#    file: $SECRETSDIR/cloudflare_email
-#  cloudflare_api_key:
-#    file: $SECRETSDIR/cloudflare_api_key
-##    file: /root/docker/core-stack/secrets/cloudflare_api_key
+secrets:
+  cloudflare_email:
+#    file: /root/docker/core-stack/secrets/cloudflare_email
+    file: $SECRETSDIR/cloudflare_email
+  cloudflare_api_token:
+    file: $SECRETSDIR/cloudflare_api_token
+#    file: /root/docker/core-stack/secrets/cloudflare_api_token
     
 ########################### networks
 networks:
@@ -40,7 +40,7 @@ services:
 #      - CF_API_KEY_FILE=/run/secrets/cloudflare_api_key
 #    secrets:
 #      - cloudflare_email
-#      - cloudflare_api_key
+#      - cloudflare_api_token
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.traefik.entrypoints=http"
