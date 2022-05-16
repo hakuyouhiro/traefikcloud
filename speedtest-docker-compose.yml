@@ -4,7 +4,8 @@ networks:
   traefik-proxy:
     external: true
 ########################### VOLUMES 
-speedtest:
+services:
+  speedtest:
     container_name: speedtest
     image: henrywhitaker3/speedtest-tracker
     ports:
