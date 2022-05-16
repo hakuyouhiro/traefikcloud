@@ -152,7 +152,7 @@ providers:
 certificatesResolvers:
   letsEncryptHttp:
     acme:
-     email: "hakuyouhiro@gmail.com"
+     email: "cypto@decentralization.wtf"
 #     storage: /root/docker/core/traefik-data/acme.json
      storage: acme.json
 #     caServer: https://acme-staging-v02.api.letsencrypt.org/directory   #staging
@@ -162,7 +162,7 @@ certificatesResolvers:
 
   letsEncrypt:
     acme:
-     email: "hakuyouhiro@gmail.com"
+     email: "cypto@decentralization.wtf"
 #     storage: /root/docker/core/traefik-data/acme.json
      storage: acme.json
 #     caServer: https://acme-staging-v02.api.letsencrypt.org/directory   #staging
