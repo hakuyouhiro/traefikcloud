@@ -17,11 +17,11 @@ global:
 # EntryPoints definition
 # Optional
 entryPoints:
-  web:
-    address: :80
+  http:
+    address: ":80"
+  https:
+    address: ":443"
 
-  websecure:
-    address: :443
 
 ################################################################
 # Traefik logs configuration
