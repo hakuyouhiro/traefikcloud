@@ -38,9 +38,9 @@ services:
 #    environment:
 #      - CF_API_EMAIL_FILE=/run/secrets/cloudflare_email
 #      - CF_API_KEY_FILE=/run/secrets/cloudflare_api_key
-    secrets:
-      - cloudflare_email
-      - cloudflare_api_key
+#    secrets:
+#      - cloudflare_email
+#      - cloudflare_api_key
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.traefik.entrypoints=http"
