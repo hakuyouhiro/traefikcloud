@@ -1,0 +1,160 @@
+version: '3.3'
+
+
+########################### SECRETS
+secrets:
+  cloudflare_email:
+#    file: /root/docker/core-stack/secrets/cloudflare_email
+    file: $SECRETSDIR/cloudflare_email
+  cloudflare_api_key:
+    file: $SECRETSDIR/cloudflare_api_key
+#    file: /root/docker/core-stack/secrets/cloudflare_api_key
+    
+########################### networks
+networks:
+  traefik-proxy:
+    external: true
+########################### SERVICES
+services:
+  ############################ FRONTENDS
+  traefik:
+    image: traefik:latest
+    #image: traefik:v2.2
+    container_name: traefik
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - traefik-proxy
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./traefik-data/traefik.yml:/traefik.yml:ro
+      - ./traefik-data/acme.json:/acme.json
+      - ./traefik-data/traefik.log:/traefik.log
+#    environment:
+#      - CF_API_EMAIL=$CLOUDFLARE_EMAIL
+#      - CF_API_KEY=$CLOUDFLARE_API_KEY
+    environment:
+      - CF_API_EMAIL_FILE=/run/secrets/cloudflare_email
+      - CF_API_KEY_FILE=/run/secrets/cloudflare_api_key
+    secrets:
+      - cloudflare_email
+      - cloudflare_api_key
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik.entrypoints=http"
+      - "traefik.http.routers.traefik.rule=Host(`traefik.$DOMAINNAME`)"
+      - "traefik.http.routers.traefik.tls=true"
+      - "traefik.http.middlewares.traefik-auth.basicauth.users=admin:$$apr1$$cWbFy3cw$$fNIVAouHOcqi4oo0DQwgA1" #username:admin ; pwd:admin
+      - "traefik.http.middlewares.traefik-https-redirect.redirectscheme.scheme=https"
+      - "traefik.http.routers.traefik.middlewares=traefik-https-redirect"
+      - "traefik.http.routers.traefik-secure.entrypoints=https"
+      - "traefik.http.routers.traefik-secure.rule=Host(`traefik.$DOMAINNAME`)"
+      - "traefik.http.routers.traefik-secure.middlewares=traefik-auth"
+      - "traefik.http.routers.traefik-secure.tls=true"
+      - "traefik.http.routers.traefik-secure.tls.certresolver=letsEncrypt"
+      - "traefik.http.routers.traefik-secure.tls.domains[0].main=$DOMAINNAME"
+      - "traefik.http.routers.traefik-secure.tls.domains[0].sans=*.$DOMAINNAME"
+      - "traefik.http.routers.traefik-secure.service=api@internal"
+      - "flame.type=application" # "app" works too
+      - "flame.name=Traefik"
+      - "flame.url=https://traefik.$DOMAINNAME"
+      - "flame.icon=spider" # optional, default is "docker"
+
+# Portainer - 
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: portainer
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - traefik-proxy
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./portainer-data:/data
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.portainer.entrypoints=http"
+      - "traefik.http.routers.portainer.rule=Host(`portainer.$DOMAINNAME`)"
+      - "traefik.http.routers.portainer.middlewares=traefik-https-redirect"
+      - "traefik.http.routers.portainer-secure.entrypoints=https"
+      - "traefik.http.routers.portainer-secure.rule=Host(`portainer.$DOMAINNAME`)"
+      - "traefik.http.routers.portainer-secure.tls=true"
+      - "traefik.http.routers.portainer-secure.tls.certresolver=letsEncrypt"
+      - "traefik.http.routers.portainer-secure.service=portainer"     
+      - "traefik.http.services.portainer.loadbalancer.server.port=9000"
+      - "flame.type=application" # "app" works too
+      - "flame.name=Portainer"
+      - "flame.url=https://portainer.$DOMAINNAME"
+      - "flame.icon=ferry" # optional, default is "docker"
+    # - flame.icon=custom to make changes in app. ie: custom icon upload
+  flame:
+    image: pawelmalak/flame:latest
+    container_name: flame
+    volumes:
+      #- /srv/config/flame:/app/data
+      - ./flame:/app/data
+      - /var/run/docker.sock:/var/run/docker.sock # optional but required for Docker integration feature
+    ports:
+      - 5005
+    environment:
+       - PASSWORD=abc123
+    restart: unless-stopped
+    networks:
+      - traefik-proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.flame.entrypoints=http"
+      - "traefik.http.routers.flame.rule=Host(`flame.$DOMAINNAME`)"
+      - "traefik.http.routers.flame.middlewares=traefik-https-redirect"
+      - "traefik.http.routers.flame-secure.entrypoints=https"
+      - "traefik.http.routers.flame-secure.rule=Host(`flame.$DOMAINNAME`)"
+      - "traefik.http.routers.flame-secure.tls=true"
+      - "traefik.http.routers.flame-secure.tls.certresolver=letsEncrypt"
+      - "traefik.http.routers.flame-secure.service=flame-core-stack"
+
+
+     
+  gc:
+    image: clockworksoul/docker-gc-cron:latest
+    container_name: docker-gc
+    network_mode: "none"
+    restart: always
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./docker-gc-exclude:/etc/docker-gc-exclude
+    environment:
+      # By default, docker-gc is run every night at midnight. Change this variable to override.
+      - CRON="0 */4 * * *"
+
+      # By default, docker will not remove an image if it is tagged in multiple repositories. If
+      # you have a server running docker where this is the case, for example in CI environments 
+      # where dockers are being built, re-tagged, and pushed, you can set this flag to 1 to override.
+      - FORCE_IMAGE_REMOVAL=1
+
+      # By default, if an error is encountered when cleaning up a container, Docker will report the
+      # error back and leave it on disk. This can sometimes lead to containers accumulating. If
+      # you run into this issue, you can force the removal of the container by setting this flag.
+      - FORCE_CONTAINER_REMOVAL=1
+
+      # By default, docker-gc will not remove a container if it exited less than 1 hour ago.
+      # Set the GRACE_PERIOD_SECONDS variable to override this default.
+      - GRACE_PERIOD_SECONDS=3600
+
+      # By default, docker-gc will proceed with deletion of containers and images. To test your
+      # settings set the DRY_RUN variable to override this default
+      - DRY_RUN=0
+
+      # By default, this process will leave any dangling volumes untouched. To instruct the
+      # process to automatically clean up any dangling volumes, simply set this value to 1.
+      - CLEAN_UP_VOLUMES=1
+      
+      # If you don't like all your log output and cron times being in UTC, you can set the
+      # TZ variable to override the default.
+      - TZ=$TZ   
