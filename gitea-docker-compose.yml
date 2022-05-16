@@ -1,0 +1,38 @@
+version: "3"
+
+########################### networks
+networks:
+  traefik-proxy:
+    external: true
+########################### SERVICES
+
+services:
+  server:
+    image: gitea/gitea:1.16.5
+    container_name: gitea
+    environment:
+      - USER_UID=UID_from_step_1
+      - USER_GID=GID_from_step_1
+    restart: always
+    networks:
+      - gitea
+    volumes:
+      - ./gitea:/data
+      - /home/git/.ssh/:/data/git/.ssh
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro
+    ports:
+      - "127.0.0.1:3000:3000"
+      - "127.0.0.1:2222:22"
+    networks:
+      - traefik-proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.gitea.entrypoints=http"
+      - "traefik.http.routers.gitea.rule=Host(`gitea.$DOMAINNAME`)"
+      - "traefik.http.routers.gitea.middlewares=traefik-https-redirect"
+      - "traefik.http.routers.gitea-secure.entrypoints=https"
+      - "traefik.http.routers.gitea-secure.rule=Host(`gitea.$DOMAINNAME`)"
+      - "traefik.http.routers.gitea-secure.tls=true"
+      - "traefik.http.routers.gitea-secure.tls.certresolver=letsEncrypt"
+      - "traefik.http.routers.gitea-secure.service=gitea"    
