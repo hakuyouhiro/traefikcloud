@@ -41,12 +41,10 @@ services:
       - ./traefik-data/traefik.yml:/traefik.yml:ro
       - ./traefik-data/acme.json:/acme.json
       - ./traefik-data/traefik.log:/var/log/traefik.log
-#    environment:
-#      - CF_API_EMAIL_FILE=/run/secrets/cloudflare_email
-#      - CF_API_KEY_FILE=/run/secrets/cloudflare_api_key
+    environment:
+      - CLOUDFLARE_DNS_API_TOKEN=/run/secrets/cloudflare_dns_api_token
+      - CLOUDFLARE_ZONE_API_TOKEN=/run/secrets/cloudflare_zone_api_token
     secrets:
-      #- cloudflare_email #For Global API
-      #- cloudflare_api_token #For Global API
       - cloudflare_dns_api_token 
       - cloudflare_zone_api_token 
     labels:
