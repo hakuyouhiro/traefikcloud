@@ -1,0 +1,30 @@
+speedtest:
+    container_name: speedtest
+    image: henrywhitaker3/speedtest-tracker
+    ports:
+    - 80
+    volumes:
+      - ~/speedtest:/config
+    environment:
+      - TZ=$TZ
+      - PGID=$PGID
+      - PUID=$PUID
+      - OOKLA_EULA_GDPR=true
+    logging:
+      driver: "json-file"
+      options:
+        max-file: "10"
+        max-size: "200k"
+    restart: unless-stopped
+    networks:
+      - traefik-proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.speedtest.entrypoints=http"
+      - "traefik.http.routers.speedtest.rule=Host(`speedtest.$DOMAINNAME`)"
+      - "traefik.http.routers.speedtest.middlewares=traefik-https-redirect"
+      - "traefik.http.routers.speedtest-secure.entrypoints=https"
+      - "traefik.http.routers.speedtest-secure.rule=Host(`speedtest.$DOMAINNAME`)"
+      - "traefik.http.routers.speedtest-secure.tls=true"
+      - "traefik.http.routers.speedtest-secure.tls.certresolver=letsEncrypt"
+      - "traefik.http.routers.speedtest-secure.service=speedtest"
