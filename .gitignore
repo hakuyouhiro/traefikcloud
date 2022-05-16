@@ -1,5 +1,6 @@
 traefik-data/traefik.log
 traefik-data/acme.json
 secrets/
+portainer-data/
 *.log
 *.log.*
