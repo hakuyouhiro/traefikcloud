@@ -158,7 +158,7 @@ certificatesResolvers:
 #     caServer: https://acme-staging-v02.api.letsencrypt.org/directory   #staging
      caServer: https://acme-v02.api.letsencrypt.org/directory #production 
      httpChallenge:
-        entryPoint: web
+        entryPoint: http
 
   letsEncrypt:
     acme:
