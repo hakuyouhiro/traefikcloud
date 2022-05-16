@@ -36,11 +36,8 @@ services:
       - ./traefik-data/acme.json:/acme.json
       - ./traefik-data/traefik.log:/traefik.log
 #    environment:
-#      - CF_API_EMAIL=$CLOUDFLARE_EMAIL
-#      - CF_API_KEY=$CLOUDFLARE_API_KEY
-    environment:
-      - CF_API_EMAIL_FILE=/run/secrets/cloudflare_email
-      - CF_API_KEY_FILE=/run/secrets/cloudflare_api_key
+#      - CF_API_EMAIL_FILE=/run/secrets/cloudflare_email
+#      - CF_API_KEY_FILE=/run/secrets/cloudflare_api_key
     secrets:
       - cloudflare_email
       - cloudflare_api_key
@@ -49,7 +46,7 @@ services:
       - "traefik.http.routers.traefik.entrypoints=http"
       - "traefik.http.routers.traefik.rule=Host(`traefik.$DOMAINNAME`)"
       - "traefik.http.routers.traefik.tls=true"
-      - "traefik.http.middlewares.traefik-auth.basicauth.users=admin:$$apr1$$cWbFy3cw$$fNIVAouHOcqi4oo0DQwgA1" #username:admin ; pwd:admin
+ #     - "traefik.http.middlewares.traefik-auth.basicauth.users=admin:$$apr1$$cWbFy3cw$$fNIVAouHOcqi4oo0DQwgA1" #username:admin ; pwd:admin
       - "traefik.http.middlewares.traefik-https-redirect.redirectscheme.scheme=https"
       - "traefik.http.routers.traefik.middlewares=traefik-https-redirect"
       - "traefik.http.routers.traefik-secure.entrypoints=https"
@@ -60,10 +57,6 @@ services:
       - "traefik.http.routers.traefik-secure.tls.domains[0].main=$DOMAINNAME"
       - "traefik.http.routers.traefik-secure.tls.domains[0].sans=*.$DOMAINNAME"
       - "traefik.http.routers.traefik-secure.service=api@internal"
-      - "flame.type=application" # "app" works too
-      - "flame.name=Traefik"
-      - "flame.url=https://traefik.$DOMAINNAME"
-      - "flame.icon=spider" # optional, default is "docker"
 
 # Portainer - 
   portainer:
@@ -89,37 +82,6 @@ services:
       - "traefik.http.routers.portainer-secure.tls.certresolver=letsEncrypt"
       - "traefik.http.routers.portainer-secure.service=portainer"     
       - "traefik.http.services.portainer.loadbalancer.server.port=9000"
-      - "flame.type=application" # "app" works too
-      - "flame.name=Portainer"
-      - "flame.url=https://portainer.$DOMAINNAME"
-      - "flame.icon=ferry" # optional, default is "docker"
-    # - flame.icon=custom to make changes in app. ie: custom icon upload
-  flame:
-    image: pawelmalak/flame:latest
-    container_name: flame
-    volumes:
-      #- /srv/config/flame:/app/data
-      - ./flame:/app/data
-      - /var/run/docker.sock:/var/run/docker.sock # optional but required for Docker integration feature
-    ports:
-      - 5005
-    environment:
-       - PASSWORD=abc123
-    restart: unless-stopped
-    networks:
-      - traefik-proxy
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.flame.entrypoints=http"
-      - "traefik.http.routers.flame.rule=Host(`flame.$DOMAINNAME`)"
-      - "traefik.http.routers.flame.middlewares=traefik-https-redirect"
-      - "traefik.http.routers.flame-secure.entrypoints=https"
-      - "traefik.http.routers.flame-secure.rule=Host(`flame.$DOMAINNAME`)"
-      - "traefik.http.routers.flame-secure.tls=true"
-      - "traefik.http.routers.flame-secure.tls.certresolver=letsEncrypt"
-      - "traefik.http.routers.flame-secure.service=flame-core-stack"
-
-
      
   gc:
     image: clockworksoul/docker-gc-cron:latest
