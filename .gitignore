@@ -1,0 +1,5 @@
+traefik-data/traefik.log
+traefik-data/acme.json
+secrets/
+*.log
+*.log.*
