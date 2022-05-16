@@ -152,14 +152,16 @@ providers:
 certificatesResolvers:
   letsEncrypt:
     acme:
-     email: "hakuyouhiro@gmail.com"
+#     email: "hakuyouhiro@gmail.com"
 #     storage: /root/docker/core/traefik-data/acme.json
      storage: acme.json
 #     caServer: https://acme-staging-v02.api.letsencrypt.org/directory   #staging
      caServer: https://acme-v02.api.letsencrypt.org/directory #production 
      httpChallenge:
         entryPoint: web
-        provider: cloudflare
-        resolvers:
-          - "1.1.1.1:53"
-          - "8.8.8.8:53"
+#     dnsChallenge:
+#        provider: cloudflare
+#        delayBeforeCheck: 10
+#        resolvers:
+#          - "1.1.1.1:53"
+#          - "8.8.8.8:53"
