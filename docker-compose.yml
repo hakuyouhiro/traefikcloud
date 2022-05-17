@@ -22,7 +22,7 @@ networks:
 services:
   ############################ FRONTENDS
   traefik:
-    image: traefik:latest
+    image: traefik:v2.6
     container_name: traefik
     restart: unless-stopped
     security_opt:
