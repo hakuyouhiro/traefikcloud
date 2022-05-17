@@ -83,7 +83,7 @@ services:
       #- "traefik.http.routers.portainer-secure.rule=Host(`portainer.$DOMAINNAME`)"
       - "traefik.http.routers.portainer-secure.rule=Host(`portainer.decentralization.wtf`)"
       - "traefik.http.routers.portainer-secure.tls=true"
-      - "traefik.http.routers.portainer-secure.tls.certresolver=letsEncrypt"
+      - "traefik.http.routers.portainer-secure.tls.certresolver=letsEncryptHttp"
       - "traefik.http.routers.portainer-secure.service=portainer"     
       - "traefik.http.services.portainer.loadbalancer.server.port=9000"
      
