@@ -152,7 +152,7 @@ providers:
 certificatesResolvers:
   letsEncryptHttp:
     acme:
-     email: "patrick.py.khong@gmail.com"
+      email: "patrick.py.khong@gmail.com"
       storage: acme.json
       httpChallenge:
         entryPoint: http
