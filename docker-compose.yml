@@ -12,7 +12,7 @@ secrets:
   cloudflare_dns_api_token:
     file: $SECRETSDIR/cloudflare_api_token
   cloudflare_zone_api_token:
-    file: $SECRETSDIR/cloudflare_api_token
+    file: $SECRETSDIR/cloudflare_zone_api_token
 
     
     
