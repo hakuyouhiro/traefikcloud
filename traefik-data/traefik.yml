@@ -89,7 +89,7 @@ log:
 #
 # Optional
 #
-#api:
+api:
   # Enable the API in insecure mode
   #
   # Optional
@@ -102,7 +102,7 @@ log:
   # Optional
   # Default: true
   #
-#  dashboard: false
+  dashboard: true
 
 ################################################################
 # Ping configuration
