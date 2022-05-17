@@ -150,20 +150,17 @@ providers:
 # Docker configuration backend
 ################################################################
 certificatesResolvers:
-#  letsEncryptHttp:
-#    acme:
-#     email: "cypto@decentralization.wtf"
-##     storage: /root/docker/core/traefik-data/acme.json
-#     storage: acme.json
-##     caServer: https://acme-staging-v02.api.letsencrypt.org/directory   #staging
-#     caServer: https://acme-v02.api.letsencrypt.org/directory #production 
-#     httpChallenge:
-#        entryPoint: http
-
-  letsEncrypt:
+  letsEncryptHttp:
     acme:
-     email: "cypto@decentralization.wtf"
+     email: "patrick.py.khong@gmail.com"
+      storage: acme.json
+      httpChallenge:
+        entryPoint: http
+  letsEncryptDNS:
+    acme:
+     email: "patrick.py.khong@gmail.com"
      storage: acme.json
+##     caServer: https://acme-staging-v02.api.letsencrypt.org/directory   #staging
      caServer: https://acme-v02.api.letsencrypt.org/directory #production 
      dnsChallenge:
         provider: cloudflare
