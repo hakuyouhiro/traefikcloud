@@ -38,8 +38,7 @@ services:
       - ./traefik-data/traefik.yml:/traefik.yml:ro
       - ./traefik-data/acme.json:/acme.json
       - ./traefik-data/traefik.log:/var/log/traefik.log
-    
-      environment:
+    environment:
       - CF_API_EMAIL_FILE=/run/secrets/cloudflare_email
       - CF_API_KEY_FILE=/run/secrets/cloudflare_global_api_token
       #- CLOUDFLARE_DNS_API_TOKEN=/run/secrets/cloudflare_dns_api_token
@@ -47,8 +46,8 @@ services:
     secrets:
       - cloudflare_email
       - cloudflare_global_api_token
-      - cloudflare_dns_api_token 
-      - cloudflare_zone_api_token 
+      #- cloudflare_dns_api_token 
+      #- cloudflare_zone_api_token 
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.traefik.entrypoints=http"
