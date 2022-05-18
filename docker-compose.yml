@@ -3,12 +3,12 @@ version: '3.3'
 
 ########################### SECRETS
 secrets:
-#  cloudflare_email:
-##    file: /root/docker/core-stack/secrets/cloudflare_email
-#    file: $SECRETSDIR/cloudflare_email
-#  cloudflare_api_token:
-#    file: $SECRETSDIR/cloudflare_api_token
-#    file: /root/docker/core-stack/secrets/cloudflare_api_token
+  cloudflare_email:
+#    file: /root/docker/core-stack/secrets/cloudflare_email
+    file: $SECRETSDIR/cloudflare_email
+  cloudflare_global_api_token:
+    file: $SECRETSDIR/cloudflare_global_api_token
+    file: /root/docker/core-stack/secrets/cloudflare_api_token
   cloudflare_dns_api_token:
     file: $SECRETSDIR/cloudflare_api_token
   cloudflare_zone_api_token:
@@ -38,10 +38,15 @@ services:
       - ./traefik-data/traefik.yml:/traefik.yml:ro
       - ./traefik-data/acme.json:/acme.json
       - ./traefik-data/traefik.log:/var/log/traefik.log
-    environment:
-      - CLOUDFLARE_DNS_API_TOKEN=/run/secrets/cloudflare_dns_api_token
-      - CLOUDFLARE_ZONE_API_TOKEN=/run/secrets/cloudflare_zone_api_token
+    
+      environment:
+      - CF_API_EMAIL_FILE=/run/secrets/cloudflare_email
+      - CF_API_KEY_FILE=/run/secrets/cloudflare_global_api_token
+      #- CLOUDFLARE_DNS_API_TOKEN=/run/secrets/cloudflare_dns_api_token
+      #- CLOUDFLARE_ZONE_API_TOKEN=/run/secrets/cloudflare_zone_api_token
     secrets:
+      - cloudflare_email
+      - cloudflare_global_api_token
       - cloudflare_dns_api_token 
       - cloudflare_zone_api_token 
     labels:
