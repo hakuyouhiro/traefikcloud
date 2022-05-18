@@ -4,11 +4,9 @@ version: '3.3'
 ########################### SECRETS
 secrets:
   cloudflare_email:
-#    file: /root/docker/core-stack/secrets/cloudflare_email
     file: $SECRETSDIR/cloudflare_email
   cloudflare_global_api_token:
     file: $SECRETSDIR/cloudflare_global_api_token
-    file: /root/docker/core-stack/secrets/cloudflare_api_token
   cloudflare_dns_api_token:
     file: $SECRETSDIR/cloudflare_api_token
   cloudflare_zone_api_token:
