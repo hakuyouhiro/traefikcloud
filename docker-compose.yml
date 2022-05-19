@@ -52,7 +52,7 @@ services:
       - "traefik.http.routers.traefik.rule=Host(`traefik.$DOMAINNAME`)"
       - "traefik.http.routers.traefik.tls=true"
       - "traefik.http.middlewares.traefik-https-redirect.redirectscheme.scheme=https"
-      - "traefik.http.middlewares.test-auth.basicauth.usersfile=./traefikdashboardfile"
+      - "traefik.http.middlewares.traefik.basicauth.usersfile=./traefikdashboardfile"
       - "traefik.http.routers.traefik.middlewares=traefik-https-redirect"
       - "traefik.http.routers.traefik-secure.entrypoints=https"
       - "traefik.http.routers.traefik-secure.rule=Host(`traefik.$DOMAINNAME`)"
