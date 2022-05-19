@@ -47,7 +47,7 @@ services:
       - "traefik.http.routers.grafana-secure.rule=Host(`grafana.$DOMAINNAME`)"
       - "traefik.http.routers.grafana-secure.tls=true"
       - "traefik.http.routers.grafana-secure.tls.certresolver=letsEncrypt"
-      - "traefik.http.routers.grafana-secure.service=grafana"     
+      - "traefik.http.routers.grafana-secure.service=grafana-traefikcloud"     
   speedtest:
     restart: always
     container_name: speedtest
