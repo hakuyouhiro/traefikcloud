@@ -22,12 +22,13 @@ services:
       - /etc/timezone:/etc/timezone:ro
       - /etc/localtime:/etc/localtime:ro
     ports:
-      - "127.0.0.1:3000:3000"
-      - "127.0.0.1:2222:22"
+      - 3000
+      - 2222:22
     networks:
       - traefik-proxy
     labels:
       - "traefik.enable=true"
+      - "traefik.http.services.gitea.loadbalancer.server.port=3000"
       - "traefik.http.routers.gitea.entrypoints=http"
       - "traefik.http.routers.gitea.rule=Host(`gitea.$DOMAINNAME`)"
       - "traefik.http.routers.gitea.middlewares=traefik-https-redirect"
@@ -35,4 +36,5 @@ services:
       - "traefik.http.routers.gitea-secure.rule=Host(`gitea.$DOMAINNAME`)"
       - "traefik.http.routers.gitea-secure.tls=true"
       - "traefik.http.routers.gitea-secure.tls.certresolver=letsEncryptDNS"
-      - "traefik.http.routers.gitea-secure.service=giteaserver-traefikcloud"    
+      - "traefik.http.routers.gitea-secure.service=giteaserver-traefikcloud"
+      
