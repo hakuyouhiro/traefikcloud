@@ -11,7 +11,8 @@ secrets:
     file: $SECRETSDIR/cloudflare_api_token
   cloudflare_zone_api_token:
     file: $SECRETSDIR/cloudflare_zone_api_token
-    
+  traefik_user_token:
+    file: $SECRETSDIR/traefik_user_token
 ########################### networks
 networks:
   traefik-proxy:
@@ -42,6 +43,7 @@ services:
       #- CLOUDFLARE_DNS_API_TOKEN=/run/secrets/cloudflare_dns_api_token
       #- CLOUDFLARE_ZONE_API_TOKEN=/run/secrets/cloudflare_zone_api_token
     secrets:
+      - traefik_user_token
       - cloudflare_email
       - cloudflare_global_api_token
       #- cloudflare_dns_api_token 
@@ -52,7 +54,7 @@ services:
       - "traefik.http.routers.traefik.rule=Host(`traefik.$DOMAINNAME`)"
       - "traefik.http.routers.traefik.tls=true"
       - "traefik.http.middlewares.traefik-https-redirect.redirectscheme.scheme=https"
-      - "traefik.http.middlewares.traefik.basicauth.usersfile=/home/ubuntu/docker/traefikcloud/traefikdashboardfile"
+      - "traefik.http.middlewares.traefik-auth.basicauth.users=/run/secrets/traefik_user_token"
       - "traefik.http.routers.traefik.middlewares=traefik-https-redirect"
       - "traefik.http.routers.traefik-secure.entrypoints=https"
       - "traefik.http.routers.traefik-secure.rule=Host(`traefik.$DOMAINNAME`)"
