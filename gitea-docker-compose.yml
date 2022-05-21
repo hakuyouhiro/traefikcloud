@@ -16,6 +16,7 @@ services:
     restart: always
     networks:
       - gitea
+      - traefik-proxy
     volumes:
       - ./gitea:/data
       - /home/git/.ssh/:/data/git/.ssh
@@ -24,8 +25,6 @@ services:
     ports:
       #- 3000:3000
       - 2222:22
-    networks:
-      - traefik-proxy
     labels:
       - "traefik.enable=true"
       - "traefik.http.services.gitea.loadbalancer.server.port=3000"
