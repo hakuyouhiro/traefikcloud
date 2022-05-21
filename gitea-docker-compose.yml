@@ -35,4 +35,4 @@ services:
       - "traefik.http.routers.gitea-secure.rule=Host(`gitea.$DOMAINNAME`)"
       - "traefik.http.routers.gitea-secure.tls=true"
       - "traefik.http.routers.gitea-secure.tls.certresolver=letsEncryptDNS"
-      - "traefik.http.routers.gitea-secure.service=giteaserver"    
+      - "traefik.http.routers.gitea-secure.service=giteaserver-traefikcloud"    
