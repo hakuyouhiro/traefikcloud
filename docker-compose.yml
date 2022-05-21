@@ -54,7 +54,7 @@ services:
       - "traefik.http.routers.traefik.rule=Host(`traefik.$DOMAINNAME`)"
       - "traefik.http.routers.traefik.tls=true"
       - "traefik.http.middlewares.traefik-https-redirect.redirectscheme.scheme=https"
-      - "traefik.http.middlewares.traefik-auth.basicauth.users=/run/secrets/traefik_user_token"
+      - "traefik.http.middlewares.traefik-auth.basicauth.usersfile=/run/secrets/traefik_user_token"
       - "traefik.http.routers.traefik.middlewares=traefik-https-redirect"
       - "traefik.http.routers.traefik-secure.entrypoints=https"
       - "traefik.http.routers.traefik-secure.rule=Host(`traefik.$DOMAINNAME`)"
