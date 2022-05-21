@@ -15,7 +15,7 @@ services:
       - USER_GID=$USER_GID
     restart: always
     networks:
-      - gitea
+    #  - gitea
       - traefik-proxy
     volumes:
       - ./gitea:/data
