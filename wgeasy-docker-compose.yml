@@ -19,7 +19,7 @@ services:
       - ./wireguard:/etc/wireguard
     ports:
       - "51820:51820/udp" # connection port
-      - "51821:51821/tcp" # web dashboard
+      #- "51821:51821/tcp" # web dashboard ; use load-balancer port
     restart: unless-stopped
     cap_add:
       - NET_ADMIN
@@ -53,4 +53,5 @@ services:
       - "traefik.http.routers.wgeasy-secure.tls=true"
       - "traefik.http.routers.wgeasy-secure.tls.certresolver=letsEncryptDNS"
       - "traefik.http.routers.wgeasy-secure.service=wgeasy-traefikcloud"     
+      - "traefik.http.services.wgeasy.loadbalancer.server.port=51821"
      
