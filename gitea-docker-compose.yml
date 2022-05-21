@@ -11,8 +11,8 @@ services:
     image: gitea/gitea:1.16.5
     container_name: gitea
     environment:
-      - USER_UID=UID_from_step_1
-      - USER_GID=GID_from_step_1
+      - USER_UID=$USER_UID
+      - USER_GID=$USER_GID
     restart: always
     networks:
       - gitea
@@ -34,5 +34,5 @@ services:
       - "traefik.http.routers.gitea-secure.entrypoints=https"
       - "traefik.http.routers.gitea-secure.rule=Host(`gitea.$DOMAINNAME`)"
       - "traefik.http.routers.gitea-secure.tls=true"
-      - "traefik.http.routers.gitea-secure.tls.certresolver=letsEncrypt"
+      - "traefik.http.routers.gitea-secure.tls.certresolver=letsEncryptDNS"
       - "traefik.http.routers.gitea-secure.service=gitea"    
