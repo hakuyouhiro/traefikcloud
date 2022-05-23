@@ -31,7 +31,7 @@ services:
       - "traefik.http.routers.monicaapp-secure.rule=Host(`monica.$DOMAINNAME`)"
       - "traefik.http.routers.monicaapp-secure.tls=true"
       - "traefik.http.routers.monicaapp-secure.tls.certresolver=letsEncryptDNS"
-      - "traefik.http.routers.monicaapp-secure.service=monicaapp"
+      - "traefik.http.routers.monicaapp-secure.service=monicaapp-traefikcloud"
   monicadb:
     image: mysql:oracle
     container_name: monicadb
