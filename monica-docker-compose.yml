@@ -33,7 +33,7 @@ services:
       - "traefik.http.routers.monicaapp-secure.tls.certresolver=letsEncryptDNS"
       - "traefik.http.routers.monicaapp-secure.service=monicaapp"
   monicadb:
-    image: mysql:5.7
+    image: mysql:oracle
     container_name: monicadb
     environment:
       - MYSQL_RANDOM_ROOT_PASSWORD=true
