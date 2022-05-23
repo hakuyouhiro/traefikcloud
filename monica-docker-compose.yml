@@ -14,7 +14,7 @@ services:
       - 80
     environment:
       - APP_KEY=$MONICAAPI
-      - DB_HOST=db
+      - DB_HOST=monicadb
       - DB_USERNAME=monica
       - DB_PASSWORD=$MONICA_DB_PASSWORD
     volumes:
