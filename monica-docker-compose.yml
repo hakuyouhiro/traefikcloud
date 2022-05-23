@@ -37,7 +37,7 @@ services:
     image: mysql:oracle
     container_name: monicadb
     environment:
-      - MYSQL_PASSWORD=$MONICA_DB_PASSWORD
+      - MYSQL_RANDOM_ROOT_PASSWORD=true
       - MYSQL_DATABASE=monica
       - MYSQL_USER=monica
       - MYSQL_PASSWORD=$MONICA_DB_PASSWORD
