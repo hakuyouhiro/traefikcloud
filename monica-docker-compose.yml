@@ -1,0 +1,54 @@
+version: "3.4"
+########################### networks 
+networks:
+  traefik-proxy:
+    external: true
+########################### VOLUMES 
+services:
+  monicaapp:
+    image: monica
+    container_name: monicaapp
+    depends_on:
+      - monicadb
+    ports:
+      - 80
+    environment:
+      - APP_KEY=$MONICAAPI
+      - DB_HOST=db
+      - DB_USERNAME=monica
+      - DB_PASSWORD=$MONICA_DB_PASSWORD
+    volumes:
+      - monicadata:/var/www/html/storage
+    restart: always
+    networks:
+      - traefik-proxy
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.monicaapp.entrypoints=http"
+      - "traefik.http.routers.monicaapp.rule=Host(`monica.$DOMAINNAME`)"
+      - "traefik.http.routers.monicaapp.middlewares=traefik-https-redirect"
+      - "traefik.http.routers.monicaapp-secure.entrypoints=https"
+      - "traefik.http.routers.monicaapp-secure.rule=Host(`monica.$DOMAINNAME`)"
+      - "traefik.http.routers.monicaapp-secure.tls=true"
+      - "traefik.http.routers.monicaapp-secure.tls.certresolver=letsEncryptDNS"
+      - "traefik.http.routers.monicaapp-secure.service=monicaapp"
+  monicadb:
+    image: mysql:5.7
+    container_name: monicadb
+    environment:
+      - MYSQL_RANDOM_ROOT_PASSWORD=true
+      - MYSQL_DATABASE=monica
+      - MYSQL_USER=monica
+      - MYSQL_PASSWORD=$MONICA_DB_PASSWORD
+    volumes:
+      - monicamysql:/var/lib/mysql
+    restart: always
+    networks:
+      - traefik-proxy
+
+volumes:
+  monicadata:
+    name: monicadata
+  monicamysql:
+    name: monicamysql
+
