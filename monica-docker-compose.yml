@@ -32,6 +32,7 @@ services:
       - "traefik.http.routers.monicaapp-secure.tls=true"
       - "traefik.http.routers.monicaapp-secure.tls.certresolver=letsEncryptDNS"
       - "traefik.http.routers.monicaapp-secure.service=monicaapp-traefikcloud"
+      - "traefik.http.services.monicaapp.loadbalancer.server.port=80"
   monicadb:
     image: mysql:oracle
     container_name: monicadb
